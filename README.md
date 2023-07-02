@@ -31,5 +31,8 @@ pip install sqlalchemy
 pip install "uvicorn[standard]"
 pip install flake8 black isort mypy
 
+# PostgreSQL用
+pip install psycopg2-binary
+
 pip freeze > requirements.txt
 ```
