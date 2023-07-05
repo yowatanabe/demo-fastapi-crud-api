@@ -3,7 +3,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
-SQLALCHEMY_DATABASE_URL = "postgresql://localhost/sql_app"
+# SQLALCHEMY_DATABASE_URL = "postgresql://localhost/sql_app"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:postgres@db/sql_app"
 
 # SQLite用定義 (connect_argsはSQLiteの場合に必要)
 # engine = create_engine(

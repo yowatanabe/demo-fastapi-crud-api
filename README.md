@@ -19,9 +19,11 @@ uvicorn app.main:app --reload
 ```
 # Swagger形式
 http://127.0.0.1:8000/docs
+http://0.0.0.0:8000/docs
 
 # ReDoc形式
 http://127.0.0.1:8000/redoc
+http://0.0.0.0:8000/redoc
 ```
 
 ## (参考)初期構築時にインストールしたもの
