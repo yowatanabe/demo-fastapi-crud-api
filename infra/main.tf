@@ -149,3 +149,12 @@ resource "aws_security_group" "db_security_group" {
     to_port   = 0
   }
 }
+
+resource "aws_ecr_repository" "demo_app_repository" {
+  name         = "demo-app"
+  force_delete = true
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
