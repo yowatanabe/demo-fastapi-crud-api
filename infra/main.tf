@@ -65,3 +65,61 @@ resource "aws_subnet" "private_1c" {
     Environment = "demo"
   }
 }
+
+resource "aws_internet_gateway" "internet_gateway" {
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Name        = "demo-app-igw"
+    Environment = "demo"
+  }
+}
+
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Name        = "demo-app-public-rtb"
+    Environment = "demo"
+  }
+}
+
+resource "aws_route_table" "private_1a" {
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Name        = "demo-app-private1a-rtb"
+    Environment = "demo"
+  }
+}
+
+resource "aws_route_table" "private_1c" {
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Name        = "demo-app-private1c-rtb"
+    Environment = "demo"
+  }
+}
+
+resource "aws_route" "public" {
+  destination_cidr_block = "0.0.0.0/0"
+  route_table_id         = aws_route_table.public.id
+  gateway_id             = aws_internet_gateway.internet_gateway.id
+}
+
+resource "aws_route_table_association" "public_1a" {
+  subnet_id      = aws_subnet.public_1a.id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table_association" "public_1c" {
+  subnet_id      = aws_subnet.public_1c.id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table_association" "private_1a" {
+  subnet_id      = aws_subnet.private_1a.id
+  route_table_id = aws_route_table.private_1a.id
+}
+
+resource "aws_route_table_association" "private_1c" {
+  subnet_id      = aws_subnet.private_1c.id
+  route_table_id = aws_route_table.private_1c.id
+}
