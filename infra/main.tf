@@ -123,3 +123,29 @@ resource "aws_route_table_association" "private_1c" {
   subnet_id      = aws_subnet.private_1c.id
   route_table_id = aws_route_table.private_1c.id
 }
+
+resource "aws_security_group" "db_security_group" {
+  description = "SecurityGroup for DB"
+  name        = "demo-app-db-sg"
+  tags = {
+    Name        = "demo-app-db-sg"
+    Environment = "demo"
+  }
+  vpc_id = aws_vpc.vpc.id
+  ingress {
+    cidr_blocks = [
+      "${aws_vpc.vpc.cidr_block}"
+    ]
+    from_port = 3306
+    protocol  = "tcp"
+    to_port   = 3306
+  }
+  egress {
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+    from_port = 0
+    protocol  = "-1"
+    to_port   = 0
+  }
+}
