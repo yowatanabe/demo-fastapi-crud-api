@@ -158,3 +158,51 @@ resource "aws_ecr_repository" "demo_app_repository" {
     scan_on_push = true
   }
 }
+
+variable "db_password" {
+  type      = string
+  sensitive = true
+}
+
+resource "aws_db_instance" "demo_app_db_instance" {
+  identifier                          = "demo-app-db"
+  allocated_storage                   = 20
+  instance_class                      = "db.t3.micro"
+  engine                              = "mysql"
+  username                            = "admin"
+  password                            = var.db_password
+  backup_window                       = "20:00-22:00"
+  backup_retention_period             = 7
+  availability_zone                   = "ap-northeast-1a"
+  maintenance_window                  = "sun:22:00-sun:22:30"
+  multi_az                            = false
+  engine_version                      = "8.0.32"
+  auto_minor_version_upgrade          = false
+  license_model                       = "general-public-license"
+  publicly_accessible                 = false
+  storage_type                        = "gp2"
+  port                                = 3306
+  storage_encrypted                   = false
+  copy_tags_to_snapshot               = true
+  iam_database_authentication_enabled = false
+  deletion_protection                 = false
+  db_subnet_group_name                = aws_db_subnet_group.demo_app_db_subnet_group.name
+  vpc_security_group_ids = [
+    "${aws_security_group.db_security_group.id}"
+  ]
+  max_allocated_storage = 1000
+  skip_final_snapshot   = true
+  tags = {
+    Name        = "demo-app-db"
+    Environment = "demo"
+  }
+}
+
+resource "aws_db_subnet_group" "demo_app_db_subnet_group" {
+  description = "demo app db subnetgroup"
+  name        = "demo-app-db-subnetgroup"
+  subnet_ids = [
+    "${aws_subnet.private_1a.id}",
+    "${aws_subnet.private_1c.id}"
+  ]
+}
