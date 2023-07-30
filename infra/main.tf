@@ -206,3 +206,52 @@ resource "aws_db_subnet_group" "demo_app_db_subnet_group" {
     "${aws_subnet.private_1c.id}"
   ]
 }
+
+resource "aws_iam_policy" "demo_app_iam_policy" {
+  name = "demo-app-app-runner-policy"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Resource = "*"
+        Action = [
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:BatchGetImage",
+          "ecr:DescribeImages",
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+        ]
+      }
+    ]
+  })
+  tags = {
+    Name        = "demo-app-app-runner-policy"
+    Environment = "demo"
+  }
+}
+
+resource "aws_iam_role" "demo_app_iam_role" {
+  name = "demo-app-app-runner-role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "build.apprunner.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+  tags = {
+    Name        = "ddemo-app-app-runner-role"
+    Environment = "demo"
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "demo_app__iam_role_policy_attachment" {
+  role       = aws_iam_role.demo_app_iam_role.name
+  policy_arn = aws_iam_policy.demo_app_iam_policy.arn
+}
